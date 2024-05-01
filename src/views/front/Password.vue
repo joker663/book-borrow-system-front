@@ -1,5 +1,5 @@
 <template>
-  <el-card style="width: 500px; margin-left: 360px;">
+  <el-card style="width: 500px;  margin: 10px">
     <el-form label-width="120px" size="small" :model="form" :rules="rules" ref="pass">
       <el-form-item label="原密码" prop="password">
         <el-input v-model="form.password" autocomplete="off" show-password></el-input>
@@ -12,7 +12,7 @@
       </el-form-item>
       <el-form-item>
         <div style="float: right">
-          <el-button autocomplete="off" @click="$router.push('/')">取 消</el-button>
+          <el-button autocomplete="off" @click="$router.push('/front/home')">取 消</el-button>
           <el-button type="primary" @click="save">确 定</el-button>
         </div>
       </el-form-item>
@@ -21,6 +21,7 @@
 </template>
 
 <script>
+import router, {resetRouter} from "@/router";
 import {Base64} from "js-base64";
 
 export default {
@@ -28,7 +29,7 @@ export default {
   data() {
     return {
       form: {},
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {},
+      reader: localStorage.getItem("reader") ? JSON.parse(localStorage.getItem("reader")) : {},
       rules: {
         password: [
           { required: true, message: '请输入原密码', trigger: 'blur' },
@@ -46,7 +47,7 @@ export default {
     }
   },
   created() {
-    this.form.username = this.user.username
+    this.form.username = this.reader.username
   },
   methods: {
     save() {
@@ -70,10 +71,14 @@ export default {
           this.form.newPassword = reversedNewPassword;
           this.form.confirmPassword = reversedConfirmPassword;
 
-          this.request.post("/user/sysUser/update/password", this.form).then(res => {
+          this.request.post("/reader/update/password", this.form).then(res => {
             if (res.code === '200') {
               this.$message.success("修改成功")
-              this.$store.commit("logout")
+              // 清空缓存
+              localStorage.removeItem("reader")
+              router.push("/front/login")
+              // 重置路由
+              resetRouter()
             } else {
               this.$message.error(res.msg)
             }
