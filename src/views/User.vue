@@ -144,6 +144,12 @@
             </el-radio-group>
           </template>
         </el-form-item>
+        <el-form-item label="Tips">
+          <el-tooltip content="默认初始密码：123"
+                      placement="bottom-start" style="margin-left: 5px;margin-right: 10px">
+            <i class="el-icon-question"/>
+          </el-tooltip>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -162,7 +168,7 @@ export default {
       serverIp: serverIp,
       title: '',
       form: {
-        gender: "1"
+        gender: 1
       },
       dialogFormVisible: false,
       tableLoading: false, // 显示加载效果
