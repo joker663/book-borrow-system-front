@@ -32,8 +32,7 @@
               row-key="id"
               @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="50"></el-table-column>
-      <el-table-column type="index" label="#" width="50" align="center"></el-table-column>
-      <el-table-column prop="name" label="菜单名称" align="center" min-width="150px"></el-table-column>
+      <el-table-column prop="name" label="菜单名称" header-align="center"  min-width="150px"></el-table-column>
       <el-table-column prop="path" label="路径" align="center" min-width="150px"></el-table-column>
       <el-table-column prop="pagePath" label="页面路径" align="center" min-width="150px"></el-table-column>
       <el-table-column prop="icon" label="图标" align="center" min-width="100px">
@@ -45,16 +44,18 @@
       <el-table-column prop="sortNum" label="排序" align="center" min-width="80px"></el-table-column>
       <el-table-column label="操作" align="center" min-width="340px">
         <template slot-scope="scope">
-<!--          新增子菜单按钮显示的条件是：该菜单的pid为null，并且没有路径-->
-          <el-button type="success" size="small" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">
-            <i class="el-icon-circle-plus-outline"></i> &nbsp;新增子菜单</el-button>
-          <el-button size="mini" type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit">编辑</el-button>
-          <el-popconfirm
-              title="确定删除吗？"
-              @confirm="handleDelete(scope.row.id)"
-          >
-            <el-button type="danger" size="mini" icon="el-icon-delete" slot="reference" class="ml-5">删除</el-button>
-          </el-popconfirm>
+          <div style="display: flex; justify-content: flex-end;">
+            <!--          新增子菜单按钮显示的条件是：该菜单的pid为null，并且没有路径-->
+            <el-button type="success" size="small" @click="handleAdd(scope.row.id)" v-if="!scope.row.pid && !scope.row.path">
+              <i class="el-icon-circle-plus-outline"></i> &nbsp;新增子菜单</el-button>
+            <el-button size="mini" type="primary" @click="handleEdit(scope.row)" icon="el-icon-edit">编辑</el-button>
+            <el-popconfirm
+                title="确定删除吗？"
+                @confirm="handleDelete(scope.row.id)"
+            >
+              <el-button type="danger" size="mini" icon="el-icon-delete" slot="reference" class="ml-5">删除</el-button>
+            </el-popconfirm>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -244,5 +245,7 @@ export default {
 </script>
 
 <style>
-
+.table-column .cell {
+  text-align: center;
+}
 </style>
