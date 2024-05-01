@@ -16,13 +16,13 @@
       </div>
       <el-dropdown-menu slot="dropdown" style="width: 100px; text-align: center">
         <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-          <router-link to="/person" style="text-decoration: none">个人信息</router-link>
+          <router-link to="/person" style="text-decoration: none;color: black">个人信息</router-link>
         </el-dropdown-item>
         <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-          <router-link to="/password" style="text-decoration: none">修改密码</router-link>
+          <router-link to="/password" style="text-decoration: none;color: black">修改密码</router-link>
         </el-dropdown-item>
         <el-dropdown-item style="font-size: 14px; padding: 5px 0">
-          <span style="text-decoration: none" @click="logout">退出登录</span>
+          <span style="text-decoration: none;color: black" @click="logout">退出登录</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
@@ -34,7 +34,7 @@ export default {
   name: "Header",
   props: {
     collapseBtnClass: String,
-    user: Object
+    user: Object,
   },
   computed: {
     currentPathName () {
