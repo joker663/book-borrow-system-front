@@ -2,59 +2,58 @@
   <div>
     <el-row :gutter="10" style="margin-top: 5px;">
       <el-col :span="6">
-        <el-card style="color: #409EFF">
-          <div><i class="el-icon-user-solid"></i>用户总数</div>
-          <div style="padding: 10px 0;text-align: center;font-weight: bold">100</div>
-        </el-card>
-      </el-col>
-<!--        <el-card style="color: #409EFF">-->
-<!--          <div><i class="el-icon-user-solid"></i>可借阅</div>-->
-<!--          <div style="padding: 10px 0;text-align: center;font-weight: bold">100</div>-->
-<!--        </el-card>-->
-<!--      </el-col>-->
-      <el-col :span="6">
-        <el-card style="color: #F56C6C">
-          <div>图书总数</div>
-          <div style="padding: 10px 0;text-align: center;font-weight: bold">100</div>
+        <el-card style="background-color: #409EFF;color: #FFFFFF">
+          <div><i class="el-icon-user-solid"></i> 读者总数</div>
+          <div style="padding: 10px 0;text-align: center;font-weight: bold">{{totalData.readerCount}}</div>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card style="color: #67C23A">
-          <div>已借出</div>
-          <div style="padding: 10px 0;text-align: center;font-weight: bold">100</div>
+        <el-card style="background-color: #E6A23C;color: #FFFFFF">
+          <div><i class="el-icon-document"></i> 图书总数</div>
+          <div style="padding: 10px 0;text-align: center;font-weight: bold">{{ totalData.totalTotalCount }}</div>
         </el-card>
       </el-col>
       <el-col :span="6">
-        <el-card style="color: #E6A23C">
-          <div>未借出</div>
-          <div style="padding: 10px 0;text-align: center;font-weight: bold">100</div>
+        <el-card style="background-color: #F56C6C;color: #FFFFFF">
+          <div><i class="el-icon-sold-out"></i> 已借出</div>
+          <div style="padding: 10px 0;text-align: center;font-weight: bold">{{ totalData.totalLendCount }}</div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card style="background-color: #67C23A;color: #FFFFFF">
+          <div><i class="el-icon-sell"></i> 可借阅</div>
+          <div style="padding: 10px 0;text-align: center;font-weight: bold">{{ totalData.totalLeaveCount }}</div>
         </el-card>
       </el-col>
       <el-row>
         <el-col :span="12">
-          <div id="main" style="width: 500px; height: 400px; margin-top: 40px"></div>
+          <div id="main" style="width: 520px; height: 400px; margin-top: 40px"></div>
         </el-col>
         <el-col :span="12">
-          <div id="pie" style="width: 500px; height: 400px; margin-top: 40px"></div>
+          <div id="pie" style="width: 600px; height: 400px; margin-top: 40px"></div>
         </el-col>
       </el-row>
-      <el-col>
-      </el-col>
+      <el-row>
+          <div id="line" style="height: 400px; margin-top: 5px"></div>
+      </el-row>
     </el-row>
   </div>
 </template>
 
-
 <script>
 import * as echarts from 'echarts'
 export default {
-
+  data() {
+    return {
+      totalData:{},
+    }
+  },
   mounted() {
-
+    this.init()
+    // 柱状图
     var option = {
       title: {
-        text: '各季度会员数量统计',
-        subtext: '趋势图',
+        text: '各季度借阅数量统计',
         left: 'center'
       },
       xAxis: {
@@ -64,36 +63,38 @@ export default {
       yAxis: {
         type: 'value'
       },
+      tooltip: {
+        trigger: 'item'
+      },
+      toolbox: {
+        feature: {
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ['line', 'bar'] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
       series: [
         {
-          data: [4,5,6,2],
+          name: '借阅数量',
+          data: [],
           type: 'bar'
         }
       ]
     };
-
     var chartDom = document.getElementById('main');
     var myChart = echarts.init(chartDom);
+    this.request.get("/home/quarter").then(res => {
+      if (res.code === '200'){
+        option.series[0].data = res.data
+        myChart.setOption(option);
+      }
+    })
 
-    // this.request.get("/echarts/members").then(res => {
-    //   // 填空
-    //   // option.xAxis.data = res.data.x
-    //   option.series[0].data = res.data
-    //   option.series[1].data = res.data
-    //   // 数据准备完毕之后再set
-      myChart.setOption(option);
-    //
-    // })
-
-
-
-
-// 饼图
-
+    // 饼图
     var pieOption = {
       title: {
-        text: '各季度会员数量统计',
-        subtext: '比例图',
+        text: '各分类图书借阅占比',
         left: 'center'
       },
       tooltip: {
@@ -113,7 +114,7 @@ export default {
               position:'inner', //标签的位置
               textStyle : {
                 fontWeight : 300 ,
-                fontSize : 14,    //文字的字体大小
+                fontSize : 15,    //文字的字体大小
                 color: "#fff"
               },
               formatter:'{d}%'
@@ -130,25 +131,85 @@ export default {
         }
       ]
     };
-
     var pieDom = document.getElementById('pie');
     var pieChart = echarts.init(pieDom);
+    this.request.get("/home/type").then(res => {
+      if (res.code === '200'){
+        pieOption.series[0].data = res.data
+        pieChart.setOption(pieOption);
+      }
+    })
 
-    // this.request.get("/echarts/members").then(res => {
-    //
-      pieOption.series[0].data = [
-        {name: "第一季度", value: 3},
-        {name: "第二季度", value: 4},
-        {name: "第三季度", value: 2},
-        {name: "第四季度", value: 7},
+    //折线图
+    var lineOption = {
+      title: {
+        text: '近7天图书借还趋势'
+      },
+      tooltip: {
+        trigger: 'axis'
+      },
+      legend: {
+        data: ['借出', '归还', '逾期']
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: []
+      },
+      yAxis: {
+        type: 'value'
+      },
+      series: [
+        {
+          name: '借出',
+          type: 'line',
+          data: []
+        },
+        {
+          name: '归还',
+          type: 'line',
+          data: []
+        },
+        {
+          name: '逾期',
+          type: 'line',
+          data: []
+        }
       ]
-      pieChart.setOption(pieOption)
-    // })
+    };
+    var lineDom = document.getElementById('line');
+    var lineChart = echarts.init(lineDom);
+    this.request.get("/home/trend").then(res => {
+      if (res.code === '200'){
+        lineOption.xAxis.data = res.data.xAxis
+        lineOption.series[0].data = res.data.lendingList
+        lineOption.series[1].data = res.data.backList
+        lineOption.series[2].data = res.data.overdueList
+        lineChart.setOption(lineOption);
+      }
+    })
 
   },
   methods: {
-
-
+    // 初始化表格信息
+    init() {
+      this.request.get("/home/statistics").then(res => {
+        if (res.code === '200'){
+          this.totalData = res.data
+        }
+      })
+    },
   }
 }
 
