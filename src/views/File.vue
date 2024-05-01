@@ -54,8 +54,8 @@
           <el-switch v-model="scope.row.enable"
                      active-color="#13ce66"
                      inactive-color="#ccc"
-                     active-value="1"
-                     inactive-value="0"
+                     :active-value="1"
+                     :inactive-value="0"
                      @change="changeEnable(scope.row)"></el-switch>
         </template>
       </el-table-column>
@@ -183,6 +183,7 @@ export default {
       this.search()
     },
     changeEnable(row) {
+      console.log(row)
       this.request.post("/file/enable/update", row).then(res => {
         if (res.code === '200') {
           this.$message.success("操作成功")
