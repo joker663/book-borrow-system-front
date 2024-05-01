@@ -14,8 +14,12 @@ const request = axios.create({
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
     let user = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : null
+    let reader = localStorage.getItem("reader") ? JSON.parse(localStorage.getItem("reader")) : null
     if (user) {
         config.headers['token'] = user.token;  // 设置请求头
+    }
+    if (reader) {
+        config.headers['ReaderToken'] = reader.token;  // 设置请求头
     }
     return config
 }, error => {
@@ -35,14 +39,29 @@ request.interceptors.response.use(
         if (typeof res === 'string') {
             res = res ? JSON.parse(res) : res
         }
+
+        // 当权限验证不通过的时候给出提示
+        if (res.code === '402') {
+            ElementUI.Message({
+                message: res.msg,
+                type: 'error'
+            });
+            if (router.currentRoute.path.startsWith("/front")) { // 如果当前路由是用户端路由
+                router.push("/front/login"); // 跳转到用户端的登录页面
+            }
+        }
+
         // 当权限验证不通过的时候给出提示
         if (res.code === '401') {
             ElementUI.Message({
                 message: res.msg,
                 type: 'error'
             });
-            router.push("/login")
+            if (!router.currentRoute.path.startsWith("/front")) { // 如果当前路由不是用户端路由
+                router.push("/login"); // 跳转到管理端的登录页面
+            }
         }
+
         return res;
     },
     error => {
