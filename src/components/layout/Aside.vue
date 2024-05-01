@@ -10,8 +10,8 @@
            router
   >
     <div style="height: 60px; line-height: 60px; text-align: center">
-      <img src="../../assets/logo.png" alt="" style="width: 20px; position: relative; top: 5px; right: 5px">
-      <b style="color: white" v-show="logoTextShow">图书借阅后台管理系统</b>
+      <img src="../../assets/frontlogo.png" alt="" style="width: 45px; position: relative; top: 3px; right: 3px">
+      <b style="color: white" v-show="logoTextShow">图书借阅管理系统</b>
     </div>
     <div v-for="item in menus" :key="item.id">
       <div v-if="item.path">
