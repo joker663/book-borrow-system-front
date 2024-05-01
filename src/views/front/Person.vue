@@ -1,5 +1,5 @@
 <template>
-  <el-card style="width: 500px; margin-left: 380px;">
+  <el-card style="width: 500px; margin: 5px ">
     <el-form label-width="80px" size="small">
       <el-upload
           class="avatar-uploader"
@@ -36,7 +36,7 @@
       </el-form-item>
       <el-form-item style="text-align: center">
         <div style="float: right">
-          <el-button autocomplete="off" @click="$router.push('/')">取 消</el-button>
+          <el-button autocomplete="off" @click="$router.push('/front/home')">取 消</el-button>
           <el-button type="primary" @click="save">确 定</el-button>
         </div>
       </el-form-item>
@@ -45,7 +45,7 @@
 </template>a
 
 <script>
-import {serverIp} from "../../public/config";
+import {serverIp} from "../../../public/config";
 
 export default {
   name: "Person",
@@ -53,28 +53,28 @@ export default {
     return {
       serverIp: serverIp,
       form: {},
-      user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
+      reader: localStorage.getItem("reader") ? JSON.parse(localStorage.getItem("reader")) : {}
     }
   },
   created() {
-    this.getUser().then(res => {
+    this.getReader().then(res => {
       this.form = res
     })
   },
   methods: {
-    async getUser() {
-      return (await this.request.get("/user/sysUser/getById/" + this.user.id)).data
+    async getReader() {
+      return (await this.request.get("/reader/getById/" + this.reader.id)).data
     },
     save() {
-      this.request.post("/user/sysUser/addOrUpdate/API_002", this.form).then(res => {
+      this.request.post("/reader/addOrUpdate/API_002", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
-          // 触发父级更新User的方法
-          this.$emit("refreshUser")
-          // 更新浏览器存储的用户信息
-          this.getUser().then(res => {
-            res.token = JSON.parse(localStorage.getItem("user")).token
-            localStorage.setItem("user", JSON.stringify(res))
+          // 触发父级更新Reader的方法
+          this.$emit("refreshReader")
+          // 更新浏览器存储的读者信息
+          this.getReader().then(res => {
+            res.token = JSON.parse(localStorage.getItem("reader")).token
+            localStorage.setItem("reader", JSON.stringify(res))
           })
         } else {
           this.$message.error("保存失败")
