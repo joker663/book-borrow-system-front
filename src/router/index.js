@@ -68,11 +68,6 @@ const routes = [
         name: 'MessageWall',
         component: () => import('../views/front/MessageWall')
       },
-      {
-        path: 'notice',
-        name: 'Notice',
-        component: () => import('../views/front/Notice')
-      },
     ]
   },
   {
