@@ -51,6 +51,11 @@
       <el-table-column prop="readerNumber" label="读者编号" align="center" min-width="180px"></el-table-column>
       <el-table-column prop="username" label="用户名" align="center" min-width="150px"></el-table-column>
       <el-table-column prop="nickname" label="昵称" align="center" min-width="180px"></el-table-column>
+      <el-table-column prop="haveTimes" label="可借阅次数" align="center" min-width="100px">
+        <template slot-scope="scope">
+          <el-tag type="success" style="font-size: 13px">{{scope.row.haveTimes}}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column prop="gender" label="性别" align="center" min-width="100px">
         <template slot-scope="scope">
           {{getGender(scope.row.gender)}}
@@ -110,7 +115,7 @@
                :before-close="handleClose"
                :visible.sync="dialogFormVisible"
                width="45%">
-      <el-form label-width="80px" size="small" ref="formRef" :model="form" :rules="rules">
+      <el-form label-width="95px" size="small" ref="formRef" :model="form" :rules="rules">
         <el-form-item label="用户名" prop="username">
           <el-input v-model="form.username" autocomplete="off" style="width: 90%;" placeholder="请输入用户名"></el-input>
         </el-form-item>
@@ -134,6 +139,15 @@
             </el-radio-group>
           </template>
         </el-form-item>
+        <el-form-item label="可借阅次数" prop="haveTimes">
+          <el-input-number v-model="form.haveTimes" controls-position="right" @change="handleTotalCountChange" :min="10"></el-input-number>
+        </el-form-item>
+        <el-form-item label="Tips">
+          <el-tooltip content="默认初始密码：123"
+                      placement="bottom-start" style="margin-left: 5px;margin-right: 10px">
+            <i class="el-icon-question"/>
+          </el-tooltip>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="handleClose">取 消</el-button>
@@ -152,7 +166,8 @@ export default {
       serverIp: serverIp,
       title: '',
       form: {
-        gender: 1
+        gender: 1,
+        haveTimes: 10
       },
       dialogFormVisible: false,
       tableLoading: false, // 显示加载效果
@@ -339,6 +354,10 @@ export default {
           this.$message.error(res.msg || '操作失败')
         }
       })
+    },
+    // 获取读者可借阅次数的值
+    handleTotalCountChange(val){
+      this.form.haveTimes = val
     },
   }
 }
