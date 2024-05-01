@@ -1,17 +1,20 @@
 <template>
   <div class="wrapper">
-    <div style="margin: 180px auto; background-color: #d3deec; width: 350px; height: 300px; padding: 20px; border-radius: 10px">
-      <div style="margin: 20px 0; text-align: center; font-size: 24px;"><b>图书借阅后台管理系统</b></div>
-      <el-form :model="user" :rules="rules" ref="userForm">
+    <h1 style="color: white; margin: 15px 0 0 20px;font-style: italic">图书借阅系统</h1>
+    <h2 style="color: white; margin: 10px 0 0 20px; font-style: italic">BOOK LENDING SYSTEM</h2>
+    <div style="margin: 100px 120px auto;
+    background-color: #ffffff; width: 350px; height: 290px; padding: 20px; border-radius: 10px;float: right">
+      <div style="margin: 15px 0; text-align: center; font-size: 24px"><b>登 录</b></div>
+      <el-form :model="reader" :rules="rules" ref="readerForm">
         <el-form-item prop="username">
-          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="user.username"></el-input>
+          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="reader.username"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-lock" show-password v-model="user.password"></el-input>
+          <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-lock" show-password v-model="reader.password"></el-input>
         </el-form-item>
-        <el-form-item style="margin: 10px 0; text-align: center">
-          <el-button type="primary" size="medium"  autocomplete="off" @click="login" style="width: 308px">登 录</el-button>
-<!--          <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/register')">注册</el-button>-->
+        <el-form-item style="margin: 10px 0; text-align: right">
+          <el-button type="primary" size="small"  autocomplete="off" @click="login">登录</el-button>
+          <el-button type="primary" size="small"  autocomplete="off" @click="$router.push('/front/register')">注册</el-button>
         </el-form-item>
         <Vcode :show="isShow"
                :imgs="[image1,image2]"
@@ -23,17 +26,19 @@
 
 <script>
 import {setRoutes} from "@/router";
-import { Base64 } from 'js-base64';
+import {Base64} from "js-base64";
 import Vcode from "vue-puzzle-vcode";
-import image1 from "@/assets/bg.jpg";
-import image2 from "@/assets/captcha.png";
+import image1 from "../../assets/bg.jpg";
+import image2 from "../../assets/captcha.png";
 
 export default {
   name: "Login",
-  components: {Vcode},
+  components: {
+    Vcode
+  },
   data() {
     return {
-      user: {},
+      reader: {},
       rules: {
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -50,14 +55,14 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.userForm.validate((valid) => {
+      this.$refs.readerForm.validate((valid) => {
         if (valid) {  // 表单校验合法
           // 对密码进行 Base64 编码
-          const encodedPassword = Base64.encode(this.user.password);
+          const encodedPassword = Base64.encode(this.reader.password);
           // 反转密码
           const reversedPassword = encodedPassword.split('').reverse().join('');
           // 将编码后的密码设置回 user 对象
-          this.user.password = reversedPassword;
+          this.reader.password = reversedPassword;
 
           // 用户名密码校验通过后，显示滑块验证码
           this.isShow = true;
@@ -69,24 +74,20 @@ export default {
     // 滑块验证码验证通过回调
     handleSliderPass() {
       // 向后端发送登录请求
-      this.request.post("/auth/login", this.user).then(res => {
-        if(res.code === '200') {
+      this.request.post("/front/auth/login", this.reader).then(res => {
+        if (res.code === '200') {
           this.isShow = false; // 通过验证后，需要手动隐藏模态框
 
-          localStorage.setItem("user", JSON.stringify(res.data))  // 存储用户信息到浏览器
-          localStorage.setItem("menus", JSON.stringify(res.data.menus))  // 存储用户信息到浏览器
+          localStorage.setItem("reader", JSON.stringify(res.data));
           // 动态设置当前用户的路由
-          setRoutes()
-          this.$message.success("登录成功")
-          if (res.data.role === 'ROLE_STUDENT') {
-            this.$router.push("/front/home")
-          } else {
-            this.$router.push("/")
-          }
+          setRoutes();
+          this.$message.success("登录成功");
+          this.$router.push("/front/home");
         } else {
-          this.$message.error(res.msg || "用户名或密码错误")
+          this.isShow = false;
+          this.$message.error(res.msg || "用户名或密码错误");
         }
-      })
+      });
     },
     // 滑块验证码验证失败回调
     handleSliderFail() {
@@ -100,7 +101,10 @@ export default {
 <style>
 .wrapper {
   height: 100vh;
-  background-color: #304156;
   overflow: hidden;
+  background-image: url("../../assets/bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 </style>
