@@ -85,7 +85,6 @@ export default {
           this.$router.push("/front/home");
         } else {
           this.isShow = false;
-          this.$message.error(res.msg || "用户名或密码错误");
         }
       });
     },

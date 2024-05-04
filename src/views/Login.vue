@@ -14,7 +14,7 @@
 <!--          <el-button type="warning" size="small"  autocomplete="off" @click="$router.push('/register')">注册</el-button>-->
         </el-form-item>
         <Vcode :show="isShow"
-               :imgs="[image1,image2]"
+               :imgs="[image2]"
                @success="handleSliderPass" @close="handleSliderFail" />
       </el-form>
     </div>
@@ -25,7 +25,6 @@
 import {setRoutes} from "@/router";
 import { Base64 } from 'js-base64';
 import Vcode from "vue-puzzle-vcode";
-import image1 from "@/assets/bg.jpg";
 import image2 from "@/assets/captcha.png";
 
 export default {
@@ -45,7 +44,7 @@ export default {
         ],
       },
       isShow: false, // 验证码模态框是否出现
-      image1,image2,
+      image2,
     }
   },
   methods: {
@@ -83,8 +82,21 @@ export default {
           } else {
             this.$router.push("/")
           }
+          // 检查即将导航到的路由和当前路由是否不同
+          // const currentPath = this.$router.currentRoute.path;
+          // let targetPath;
+          // if (res.data.role === 'ROLE_STUDENT') {
+          //   targetPath = "/front/home";
+          // } else {
+          //   targetPath = "/";
+          // }
+          //
+          // // 如果目标路径不是当前路径，才进行导航
+          // if (currentPath !== targetPath) {
+          //   this.$router.push(targetPath);
+          // }
         } else {
-          this.$message.error(res.msg || "用户名或密码错误")
+          this.isShow = false;
         }
       })
     },

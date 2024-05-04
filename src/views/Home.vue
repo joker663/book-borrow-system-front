@@ -193,9 +193,12 @@ export default {
     this.request.get("/home/trend").then(res => {
       if (res.code === '200'){
         lineOption.xAxis.data = res.data.xAxis
-        lineOption.series[0].data = res.data.lendingList
-        lineOption.series[1].data = res.data.backList
-        lineOption.series[2].data = res.data.overdueList
+        // lineOption.series[0].data = res.data.lendingList
+        // lineOption.series[1].data = res.data.backList
+        // lineOption.series[2].data = res.data.overdueList
+        lineOption.series[0].data = [3,4,5,3,2,5,6]
+        lineOption.series[1].data = [2,6,4,5,6,5,4]
+        lineOption.series[2].data = [5,4,3,5,3,1,3]
         lineChart.setOption(lineOption);
       }
     })

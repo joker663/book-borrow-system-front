@@ -57,7 +57,7 @@ request.interceptors.response.use(
                 message: res.msg,
                 type: 'error'
             });
-            if (!router.currentRoute.path.startsWith("/front")) { // 如果当前路由不是用户端路由
+            if (router.currentRoute.path !== '/login' && !router.currentRoute.path.startsWith("/front")) { // 如果当前路由不是用户端路由
                 router.push("/login"); // 跳转到管理端的登录页面
             }
         }
