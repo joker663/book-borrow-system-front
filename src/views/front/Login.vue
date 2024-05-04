@@ -4,7 +4,7 @@
     <h2 style="color: white; margin: 10px 0 0 20px; font-style: italic">BOOK LENDING SYSTEM</h2>
     <div style="margin: 100px 120px auto;
     background-color: #ffffff; width: 350px; height: 290px; padding: 20px; border-radius: 10px;float: right">
-      <div style="margin: 15px 0; text-align: center; font-size: 24px"><b>登 录</b></div>
+      <div style="margin: 15px 0; text-align: center; font-size: 24px"><b>欢迎来到悦荐书屋</b></div>
       <el-form :model="reader" :rules="rules" ref="readerForm">
         <el-form-item prop="username">
           <el-input size="medium" style="margin: 10px 0" prefix-icon="el-icon-user" v-model="reader.username"></el-input>
